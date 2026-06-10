@@ -14,6 +14,7 @@ var score = 0; // variable to keep track of the score
 var started = false; // variable to keep track of whether the game has started
 var colors = ["red", "orange", "yellow", "green", "blue", "purple"]; 
 var colorIndex = 0;
+var isReversed = false
 
 // TODO 4, Part 1: Create the apple variable
 var apple = {};
@@ -208,6 +209,9 @@ function handleAppleCollision() {
   makeSnakeSquare(row, column);
   snake.tail.element.css("backgroundColor", colors[colorIndex]);
   colorIndex = (colorIndex + 1) % colors.length;
+  if (score % 10 === 0){
+    isReversed = !isReversed;
+  }
 }
 
 function hasCollidedWithSnake() {
@@ -242,6 +246,7 @@ function endGame() {
   scoreElement.text("Score: 0");
   score = 0;
   colorIndex = 0;
+  isReversed = false;
 
   // restart the game after 500 ms
   setTimeout(init, 500);
@@ -314,6 +319,18 @@ snake.tail = snakeSquare;
 function handleKeyDown(event) {
   // TODO 7: make the handleKeyDown function register which key is pressed
 activeKey = event.which;
+
+if ( isReversed){
+  if (event.which === KEY.LEFT) {
+    activeKey = KEY.RIGHT;
+  } else if (event.which ===  KEY.RIGHT) {
+    activeKey = KEY.LEFT;
+  } else if (event.which === KEY.UP) {
+    activeKey = KEY.DOWN;
+  } else if (event.which === KEY.DOWN) {
+    activeKey = KEY.UP
+  }
+}
 console.log(activeKey);
 
   // If a valid direction key is pressed, start the game
