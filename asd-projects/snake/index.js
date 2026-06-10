@@ -12,6 +12,8 @@ var highScoreElement = $("#highScore");
 // Game Variables
 var score = 0; // variable to keep track of the score
 var started = false; // variable to keep track of whether the game has started
+var colors = ["red", "orange", "yellow", "green", "blue", "purple"]; 
+var colorIndex = 0;
 
 // TODO 4, Part 1: Create the apple variable
 var apple = {};
@@ -168,8 +170,12 @@ function hasHitWall() {
     
     HINT: What will the row and column of the snake's head be if this were the case?
   */
-
-
+if (snake.head.row < 0 || snake.head.row >= ROWS + 1) {
+  return true;
+}
+if (snake.head.column < 0 || snake.head.column >= COLUMNS + 1) {
+  return true;
+}
 
   return false;
 }
@@ -181,9 +187,9 @@ function hasCollidedWithApple() {
     
     HINT: Both the apple and the snake's head are aware of their own row and column
   */
-
-
-
+if (snake.head.row === apple.row && snake.head.column === apple.column) {
+  return true;
+}
   return false;
 }
 
@@ -200,6 +206,8 @@ function handleAppleCollision() {
   var column = snake.tail.column;
   
   makeSnakeSquare(row, column);
+  snake.tail.element.css("backgroundColor", colors[colorIndex]);
+  colorIndex = (colorIndex + 1) % colors.length;
 }
 
 function hasCollidedWithSnake() {
@@ -210,7 +218,12 @@ function hasCollidedWithSnake() {
     HINT: Each part of the snake's body is stored in the snake.body Array. The
     head and each part of the snake's body also knows its own row and column.
   */
-
+for (var i = 1; i < snake.body.length; i++) {
+  var currentSnakeSquare = snake.body[i];
+  if (snake.head.row === currentSnakeSquare.row && snake.head.column === currentSnakeSquare.column) {
+    return true;
+  }
+}
 
 
   return false;
@@ -228,6 +241,7 @@ function endGame() {
   highScoreElement.text("High Score: " + calculateHighScore());
   scoreElement.text("Score: 0");
   score = 0;
+  colorIndex = 0;
 
   // restart the game after 500 ms
   setTimeout(init, 500);
@@ -345,6 +359,12 @@ function getRandomAvailablePosition() {
       not occupied by a snakeSquare in the snake's body. If it is then set 
       spaceIsAvailable to false so that a new position is generated.
     */
+   for (var i = 0; i< snake.body.length; i++) {
+var CurrentSnakeSquare = snake.body[i];
+if (randomPosition.row === CurrentSnakeSquare.row && randomPosition.column === CurrentSnakeSquare.column) {
+  spaceIsAvailable = false;
+}
+   }
 
 
 
